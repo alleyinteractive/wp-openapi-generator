@@ -7,7 +7,7 @@
  * Author: Sean Fisher
  * Author URI: https://github.com/alleyinteractive/wp-swagger-generator
  * Requires at least: 5.9
- * Tested up to: 6.2
+ * Tested up to: 7.1.2
  *
  * Text Domain: wp-swagger-generator
  * Domain Path: /languages/
