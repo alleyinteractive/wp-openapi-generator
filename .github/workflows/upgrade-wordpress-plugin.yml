@@ -15,5 +15,5 @@ jobs:
     - uses: actions/checkout@v7
     - uses: alleyinteractive/action-update-wordpress-plugin@v2.0.1
       with:
-        plugin-file: 'wp-swagger-generator.php'
-        upgrade-npm-dependencies: "true"
+        plugin-file: 'wp-openapi-generator.php'
+        upgrade-npm-dependencies: "false"

@@ -2,13 +2,13 @@
 /**
  * {{ psr4ClassName name }} test class file
  *
- * @package create-wordpress-plugin
+ * @package wp-openapi-generator
  */
 
-namespace Alley\WP\Create_WordPress_Plugin\\{{ wpNamespace inputs.featureName prefix="Tests\Features" }};
+namespace Alley\WP\OpenAPI_Generator\\{{ wpNamespace inputs.featureName prefix="Tests\Features" }};
 
-use Create_WordPress_Plugin\Tests\TestCase;
-use Create_WordPress_Plugin\\{{ wpNamespace inputs.featureName prefix="Features" }}\\{{ wpClassName inputs.featureName }};
+use Alley\WP\OpenAPI_Generator\Tests\TestCase;
+use Alley\WP\OpenAPI_Generator\\{{ wpNamespace inputs.featureName prefix="Features" }}\\{{ wpClassName inputs.featureName }};
 
 /**
  * {{ replace (psr4ClassName inputs.featureName) "_" " " }} Test for the {{ wpClassName inputs.featureName }} class.

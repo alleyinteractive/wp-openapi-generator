@@ -1,16 +1,16 @@
 <?php
 /**
- * Swagger API Documentation Generator Tests: Base Test Class
+ * OpenAPI Generator Tests: Base Test Class
  *
- * @package wp-swagger-generator
+ * @package wp-openapi-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Tests;
+namespace Alley\WP\OpenAPI_Generator\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
 
 /**
- * Swagger API Documentation Generator Base Test Case
+ * OpenAPI Generator Base Test Case
  */
 abstract class TestCase extends TestkitTest_Case {
 
