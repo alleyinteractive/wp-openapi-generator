@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="wp-swagger-generator" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
-  <description>PHP_CodeSniffer standard for wp-swagger-generator.</description>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="wp-openapi-generator" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+  <description>PHP_CodeSniffer standard for wp-openapi-generator.</description>
 
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive" />
@@ -38,7 +38,7 @@
       <property name="prefixes" type="array">
         <element value="alleyinteractive" />
         <element value="alley" />
-        <element value="wp_swagger_generator" />
+        <element value="wp_openapi_generator" />
       </property>
     </properties>
   </rule>
@@ -55,7 +55,9 @@
     <exclude-pattern>src/assets.php</exclude-pattern>
   </rule>
 
+  <!-- Classes follow PSR-4 file naming. -->
   <rule ref="WordPress.Files.FileName">
+    <exclude-pattern>src/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
   </rule>
 </ruleset>

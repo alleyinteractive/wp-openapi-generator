@@ -1,12 +1,12 @@
 {
-    "name": "alleyinteractive/wp-swagger-generator",
-    "description": "Plugin/package to generate Swagger documentation for the WordPress REST API.",
+    "name": "alleyinteractive/wp-openapi-generator",
+    "description": "Generate an OpenAPI document for the WordPress REST API and browse it with Swagger UI.",
     "type": "wordpress-plugin",
     "keywords": [
         "alleyinteractive",
-        "wp-swagger-generator"
+        "wp-openapi-generator"
     ],
-    "homepage": "https://github.com/alleyinteractive/wp-swagger-generator",
+    "homepage": "https://github.com/alleyinteractive/wp-openapi-generator",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -15,33 +15,29 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "alleyinteractive/composer-wordpress-autoloader": "^1.0",
-        "alleyinteractive/wp-type-extensions": "^5.0"
+        "php": "^8.1"
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^2.0",
         "mantle-framework/testkit": "^1.0",
+        "php-stubs/wp-cli-stubs": "dev-master",
         "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
         "allow-plugins": {
-            "alleyinteractive/composer-wordpress-autoloader": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "pestphp/pest-plugin": true
         },
         "sort-packages": true
     },
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
-            "Alley\\WP\\Swagger_Generator\\Tests\\": "tests"
+            "Alley\\WP\\OpenAPI_Generator\\": "src/"
         }
     },
-    "extra": {
-        "wordpress-autoloader": {
-            "autoload": {
-                "Alley\\WP\\Swagger_Generator\\": "src"
-            }
+    "autoload-dev": {
+        "psr-4": {
+            "Alley\\WP\\OpenAPI_Generator\\Tests\\": "tests"
         }
     },
     "minimum-stability": "dev",

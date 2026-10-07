@@ -2,19 +2,13 @@ includes:
   - vendor/szepeviktor/phpstan-wordpress/extension.neon
 
 parameters:
-	# Level 9 is the highest level
 	level: max
 
-	paths:
-		- blocks/
-		- entries/
-		- src/
-		- wp-swagger-generator.php
+	bootstrapFiles:
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
 
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
-#
-#    checkMissingIterableValueType: false
+	paths:
+		- src/
+		- templates/
+		- uninstall.php
+		- wp-openapi-generator.php

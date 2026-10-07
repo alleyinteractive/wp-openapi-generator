@@ -2,19 +2,26 @@
 /**
  * The main plugin function
  *
- * @package wp-swagger-generator
+ * @package wp-openapi-generator
  */
 
-namespace Alley\WP\Swagger_Generator;
+declare(strict_types=1);
 
-use Alley\WP\Features\Group;
+namespace Alley\WP\OpenAPI_Generator;
 
 /**
  * Instantiate the plugin.
  */
 function main(): void {
-	// Add features here.
-	$plugin = new Group();
+	$features = [
+		new Features\Spec_Endpoint(),
+		new Features\Path_Filter(),
+		new Features\Docs_Page(),
+		new Features\Settings_Page(),
+		new Features\CLI_Command(),
+	];
 
-	$plugin->boot();
+	foreach ( $features as $feature ) {
+		$feature->boot();
+	}
 }
