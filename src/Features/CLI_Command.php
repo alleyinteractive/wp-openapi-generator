@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Alley\WP\OpenAPI_Generator\Features;
 
 use Alley\WP\OpenAPI_Generator\Spec_Generator;
-use Alley\WP\Types\Feature;
+use Alley\WP\OpenAPI_Generator\Feature;
 use WP_CLI;
 
 /**

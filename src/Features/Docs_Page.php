@@ -10,7 +10,8 @@ declare(strict_types=1);
 namespace Alley\WP\OpenAPI_Generator\Features;
 
 use Alley\WP\OpenAPI_Generator\Settings;
-use Alley\WP\Types\Feature;
+use Alley\WP\OpenAPI_Generator\Spec_Generator;
+use Alley\WP\OpenAPI_Generator\Feature;
 
 /**
  * Renders Swagger UI for the OpenAPI document on the front end.
@@ -174,7 +175,16 @@ JS
 			],
 		];
 
-		foreach ( rest_get_server()->get_namespaces() as $namespace ) {
+		$server = rest_get_server();
+
+		foreach ( $server->get_namespaces() as $namespace ) {
+			// Skip namespaces whose routes are all excluded, so the menu doesn't offer empty documents.
+			$paths = ( new Spec_Generator( $server, [ $namespace ] ) )->generate()['paths'] ?? [];
+
+			if ( ! is_array( $paths ) || ! $paths ) {
+				continue;
+			}
+
 			$urls[] = [
 				'url'  => Spec_Endpoint::url( [ $namespace ] ),
 				'name' => $namespace,

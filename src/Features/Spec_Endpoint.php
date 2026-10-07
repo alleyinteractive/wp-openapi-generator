@@ -11,7 +11,7 @@ namespace Alley\WP\OpenAPI_Generator\Features;
 
 use Alley\WP\OpenAPI_Generator\Settings;
 use Alley\WP\OpenAPI_Generator\Spec_Generator;
-use Alley\WP\Types\Feature;
+use Alley\WP\OpenAPI_Generator\Feature;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -61,22 +61,48 @@ final class Spec_Endpoint implements Feature {
 			self::NAMESPACE,
 			self::ROUTE,
 			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_spec' ],
-				'permission_callback' => [ $this, 'permission_callback' ],
-				'args'                => [
-					'namespace' => [
-						'description' => __( 'Limit the document to these REST namespaces.', 'wp-openapi-generator' ),
-						'type'        => 'array',
-						'items'       => [ 'type' => 'string' ],
-						'default'     => [],
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_spec' ],
+					'permission_callback' => [ $this, 'permission_callback' ],
+					'args'                => [
+						'namespace' => [
+							'description' => __( 'Limit the document to these REST namespaces.', 'wp-openapi-generator' ),
+							'type'        => 'array',
+							'items'       => [ 'type' => 'string' ],
+							'default'     => [],
+						],
+					],
+					'openapi'             => [
+						'summary' => __( 'Retrieve the OpenAPI document', 'wp-openapi-generator' ),
 					],
 				],
-				'openapi'             => [
-					'summary' => __( 'Retrieve the OpenAPI document', 'wp-openapi-generator' ),
-				],
+				'schema' => [ $this, 'get_schema' ],
 			]
 		);
+	}
+
+	/**
+	 * Schema of the spec endpoint's response.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get_schema(): array {
+		return [
+			'$schema'     => 'http://json-schema.org/draft-04/schema#',
+			'title'       => 'openapi-document',
+			'description' => __( 'An OpenAPI 3.1 document.', 'wp-openapi-generator' ),
+			'type'        => 'object',
+			'properties'  => [
+				'openapi'    => [ 'type' => 'string' ],
+				'info'       => [ 'type' => 'object' ],
+				'servers'    => [ 'type' => 'array' ],
+				'tags'       => [ 'type' => 'array' ],
+				'paths'      => [ 'type' => 'object' ],
+				'components' => [ 'type' => 'object' ],
+				'security'   => [ 'type' => 'array' ],
+			],
+		];
 	}
 
 	/**

@@ -85,6 +85,8 @@ final class Spec_Generator {
 				continue;
 			}
 
+			$route_path = Route_Path::from_route( $route );
+
 			/**
 			 * Filters whether a route is included in the OpenAPI document.
 			 *
@@ -92,13 +94,13 @@ final class Spec_Generator {
 			 * @param string              $route    Route regex.
 			 * @param array<array<mixed>> $handlers Route handlers.
 			 * @param array<mixed>        $options  Route options.
+			 * @param string              $path     OpenAPI path, such as `/wp/v2/posts/{id}`.
 			 */
-			if ( ! apply_filters( 'wp_openapi_generator_include_route', $this->is_shown_in_index( $handlers, $options ), $route, $handlers, $options ) ) {
+			if ( ! apply_filters( 'wp_openapi_generator_include_route', $this->is_shown_in_index( $handlers, $options ), $route, $handlers, $options, $route_path->path ) ) {
 				continue;
 			}
 
-			$route_path = Route_Path::from_route( $route );
-			$template   = (string) preg_replace( '/\{[^}]+\}/', '{}', $route_path->path );
+			$template = (string) preg_replace( '/\{[^}]+\}/', '{}', $route_path->path );
 
 			// OpenAPI cannot hold two paths that differ only by parameter names, so the first route registered wins.
 			if ( isset( $templates[ $template ] ) && $templates[ $template ] !== $route_path->path ) {

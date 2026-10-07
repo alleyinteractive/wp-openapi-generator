@@ -11,7 +11,7 @@ inputs:
 
 files:
   - source: feature.php.hbs
-    destination: src/features/{{ wpClassFilename inputs.featureName }}
+    destination: src/Features/{{ wpClassName inputs.featureName }}.php
   - source: test.php.hbs
     if: "{{ inputs.tests }}"
     destination: tests/Feature/{{ psr4ClassFilename inputs.featureName suffix="Test.php" }}

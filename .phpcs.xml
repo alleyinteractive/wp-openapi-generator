@@ -55,7 +55,9 @@
     <exclude-pattern>src/assets.php</exclude-pattern>
   </rule>
 
+  <!-- Classes follow PSR-4 file naming. -->
   <rule ref="WordPress.Files.FileName">
+    <exclude-pattern>src/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
   </rule>
 </ruleset>

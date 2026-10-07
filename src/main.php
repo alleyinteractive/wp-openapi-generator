@@ -9,18 +9,19 @@ declare(strict_types=1);
 
 namespace Alley\WP\OpenAPI_Generator;
 
-use Alley\WP\Features\Group;
-
 /**
  * Instantiate the plugin.
  */
 function main(): void {
-	$plugin = new Group(
+	$features = [
 		new Features\Spec_Endpoint(),
+		new Features\Path_Filter(),
 		new Features\Docs_Page(),
 		new Features\Settings_Page(),
 		new Features\CLI_Command(),
-	);
+	];
 
-	$plugin->boot();
+	foreach ( $features as $feature ) {
+		$feature->boot();
+	}
 }

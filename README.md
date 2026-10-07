@@ -40,6 +40,8 @@ composer require alleyinteractive/wp-openapi-generator
 wp plugin activate wp-openapi-generator
 ```
 
+The plugin has no runtime dependencies and loads its own classes when Composer's autoloader isn't present, so you can also clone or download it into `wp-content/plugins` and activate it without running `composer install`.
+
 ## Quick start
 
 Once the plugin is active, there are three ways to get the document.
@@ -153,7 +155,7 @@ Everything the plugin generates can be changed with filters. The narrower filter
 
 | Filter | Use it to | Arguments |
 | --- | --- | --- |
-| `wp_openapi_generator_include_route` | Include or exclude whole routes | `bool $include`, `string $route`, `array $handlers`, `array $options` |
+| `wp_openapi_generator_include_route` | Include or exclude whole routes | `bool $include`, `string $route`, `array $handlers`, `array $options`, `string $path` |
 | `wp_openapi_generator_endpoint_args` | Change an endpoint's arguments, in WordPress format, before they become parameters or a request body | `array $args`, `string $method`, `string $route`, `array $handler` |
 | `wp_openapi_generator_route_schema` | Change a route's response schema, in WordPress format, before it is converted | `?array $schema`, `string $route`, `array $options` |
 | `wp_openapi_generator_responses` | Change an operation's responses | `array $responses`, `string $method`, `string $route`, `array $handler`, `?string $schema_ref` |
@@ -170,6 +172,8 @@ Everything the plugin generates can be changed with filters. The narrower filter
 `$method` is always lowercase, and `$route` is the route regex exactly as registered, such as `/wp/v2/posts/(?P<id>[\d]+)`.
 
 ### Exclude routes
+
+For simple cases, use the [path patterns setting](#settings-and-access). For anything more involved, use the filter. It receives both the route regex and the OpenAPI path:
 
 ```php
 add_filter(
@@ -315,6 +319,23 @@ Go to **Settings > OpenAPI** to:
 
 - **Make the documentation public.** By default, only users with the `manage_options` capability can open the documentation page or fetch the JSON; everyone else gets a 404 page, and the JSON endpoint returns a 401 or 403. Turn on public access to let anyone view both. Endpoints still enforce their own permissions either way: public docs show what an endpoint accepts, not data the visitor can't otherwise reach.
 - **Change the documentation path** from `openapi` to something like `api/docs`.
+- **Limit which paths are documented.** List path patterns, one per line, and choose whether the list is an allow list ("only include paths that match a pattern") or a deny list ("exclude paths that match a pattern"). Leave the list empty to document everything.
+
+Patterns match the OpenAPI path, such as `wp/v2/posts/{id}`, without the leading slash. `*` matches any characters, including slashes, and matching ignores case:
+
+| Pattern | Matches |
+| --- | --- |
+| `wp/v2/posts` | Only `/wp/v2/posts` |
+| `wp/v2/posts/*` | Everything under it: `/wp/v2/posts/{id}`, `/wp/v2/posts/{parent}/revisions`, and so on, but not `/wp/v2/posts` itself |
+| `wp/v2/posts*` | `/wp/v2/posts` and everything under it |
+| `wp/v2/*/revisions` | The revisions route of every post type |
+| `my-plugin/*` | Everything in the `my-plugin` namespaces |
+
+The patterns apply to the documentation page, the JSON endpoint, and WP-CLI. Namespaces left with no paths are dropped from the documentation page's menu.
+
+### Finding missing shapes
+
+The settings page ends with an expandable **Missing shapes** list: every documented operation that has no response schema, or has arguments without a type or description. It reads the generated document, so anything you fill in with the `openapi` option or a filter drops off the list. Namespace index routes are left out.
 
 Without pretty permalinks, the documentation page is at `/?wp_openapi_generator_docs=1`.
 

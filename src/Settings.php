@@ -23,17 +23,19 @@ final class Settings {
 	/**
 	 * Default settings.
 	 *
-	 * @var array{public: bool, path: string}
+	 * @var array{public: bool, path: string, path_filter: 'allow'|'deny', path_patterns: list<string>}
 	 */
 	public const DEFAULTS = [
-		'public' => false,
-		'path'   => 'openapi',
+		'public'        => false,
+		'path'          => 'openapi',
+		'path_filter'   => 'deny',
+		'path_patterns' => [],
 	];
 
 	/**
 	 * Get all settings.
 	 *
-	 * @return array{public: bool, path: string}
+	 * @return array{public: bool, path: string, path_filter: 'allow'|'deny', path_patterns: list<string>}
 	 */
 	public static function all(): array {
 		return self::sanitize( get_option( self::OPTION, self::DEFAULTS ) );
@@ -81,16 +83,25 @@ final class Settings {
 	 * Sanitize settings.
 	 *
 	 * @param mixed $value Raw settings.
-	 * @return array{public: bool, path: string}
+	 * @return array{public: bool, path: string, path_filter: 'allow'|'deny', path_patterns: list<string>}
 	 */
 	public static function sanitize( mixed $value ): array {
 		$value = is_array( $value ) ? $value : [];
 		$path  = is_string( $value['path'] ?? null ) ? strtolower( $value['path'] ) : '';
 		$path  = trim( (string) preg_replace( [ '#[^a-z0-9/_-]+#', '#/{2,}#' ], [ '', '/' ], $path ), '/' );
 
+		$patterns = $value['path_patterns'] ?? [];
+		$patterns = is_string( $patterns ) ? preg_split( '/[\r\n,]+/', $patterns ) : $patterns;
+		$patterns = array_map(
+			fn ( $pattern ) => trim( (string) preg_replace( '#[^A-Za-z0-9/_.*{}-]+#', '', $pattern ), '/' ),
+			array_filter( is_array( $patterns ) ? $patterns : [], 'is_string' ),
+		);
+
 		return [
-			'public' => ! empty( $value['public'] ),
-			'path'   => '' !== $path ? $path : self::DEFAULTS['path'],
+			'public'        => ! empty( $value['public'] ),
+			'path'          => '' !== $path ? $path : self::DEFAULTS['path'],
+			'path_filter'   => 'allow' === ( $value['path_filter'] ?? null ) ? 'allow' : 'deny',
+			'path_patterns' => array_values( array_unique( array_filter( $patterns, fn ( $pattern ) => '' !== $pattern ) ) ),
 		];
 	}
 }

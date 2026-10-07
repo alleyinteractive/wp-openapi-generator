@@ -30,24 +30,25 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 define( 'WP_OPENAPI_GENERATOR_DIR', __DIR__ );
 
-if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
-	// The dependencies may have been installed by a parent project that loads this plugin as a Composer dependency.
-	if ( ! class_exists( \Composer\InstalledVersions::class ) ) {
-		\add_action(
-			'admin_notices',
-			function () {
-				?>
-				<div class="notice notice-error">
-					<p><?php esc_html_e( 'Composer is not installed and wp-openapi-generator cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-openapi-generator' ); ?></p>
-				</div>
-				<?php
-			}
-		);
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
-		return;
-	}
-} else {
-	require_once __DIR__ . '/vendor/wordpress-autoload.php';
+// With no runtime dependencies, the plugin can load its own classes when Composer hasn't been run.
+if ( ! class_exists( Spec_Generator::class ) ) {
+	spl_autoload_register(
+		function ( string $class_name ): void {
+			$prefix = __NAMESPACE__ . '\\';
+
+			if ( str_starts_with( $class_name, $prefix ) ) {
+				$file = __DIR__ . '/src/' . str_replace( '\\', '/', substr( $class_name, strlen( $prefix ) ) ) . '.php';
+
+				if ( file_exists( $file ) ) {
+					require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Built from this plugin's own src directory.
+				}
+			}
+		}
+	);
 }
 
 require_once __DIR__ . '/src/main.php';
