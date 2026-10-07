@@ -53,6 +53,13 @@ final class Spec_Generator {
 	private array $tags = [];
 
 	/**
+	 * Namespace of each path that has an operation, keyed by path.
+	 *
+	 * @var array<string, string>
+	 */
+	private array $path_namespaces = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param WP_REST_Server $server     REST server to read routes from.
@@ -69,9 +76,10 @@ final class Spec_Generator {
 	 * @return array<string, mixed>
 	 */
 	public function generate(): array {
-		$this->schemas       = [];
-		$this->operation_ids = [];
-		$this->tags          = [];
+		$this->schemas         = [];
+		$this->operation_ids   = [];
+		$this->tags            = [];
+		$this->path_namespaces = [];
 
 		$paths     = [];
 		$templates = [];
@@ -140,6 +148,8 @@ final class Spec_Generator {
 
 					if ( $operation ) {
 						$paths[ $route_path->path ][ $method ] = $operation;
+
+						$this->path_namespaces[ $route_path->path ] = $namespace;
 					}
 				}
 			}
@@ -188,6 +198,15 @@ final class Spec_Generator {
 		 * @param string[]             $namespaces Namespaces the document was limited to, or empty for all.
 		 */
 		return apply_filters( 'wp_openapi_generator_spec', $spec, $this->namespaces );
+	}
+
+	/**
+	 * Namespace of each path in the most recently generated document, keyed by path.
+	 *
+	 * @return array<string, string>
+	 */
+	public function path_namespaces(): array {
+		return $this->path_namespaces;
 	}
 
 	/**

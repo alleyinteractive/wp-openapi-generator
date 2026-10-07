@@ -175,13 +175,15 @@ JS
 			],
 		];
 
-		$server = rest_get_server();
+		$server    = rest_get_server();
+		$generator = new Spec_Generator( $server );
+		$paths     = $generator->generate()['paths'] ?? [];
+
+		// Skip namespaces whose routes are all excluded, so the menu doesn't offer empty documents.
+		$documented = is_array( $paths ) ? array_intersect_key( $generator->path_namespaces(), $paths ) : [];
 
 		foreach ( $server->get_namespaces() as $namespace ) {
-			// Skip namespaces whose routes are all excluded, so the menu doesn't offer empty documents.
-			$paths = ( new Spec_Generator( $server, [ $namespace ] ) )->generate()['paths'] ?? [];
-
-			if ( ! is_array( $paths ) || ! $paths ) {
+			if ( ! in_array( $namespace, $documented, true ) ) {
 				continue;
 			}
 
